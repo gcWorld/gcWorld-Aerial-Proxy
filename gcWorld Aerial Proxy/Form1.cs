@@ -22,7 +22,6 @@ namespace gcWorld_Aerial_Proxy
     {
 
         static Thread t;
-        static String googleapi = "";
         public static string provider = "google";
         public static string type = "satellite";
         public static string type_bing = "Aerial";
@@ -38,11 +37,15 @@ namespace gcWorld_Aerial_Proxy
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            string version = System.Windows.Forms.Application.ProductVersion;
+            this.Text = String.Format("My Application Version {0}", version);
+
             int provider_setting = Properties.Settings.Default.provider;
             int google_settings = Properties.Settings.Default.google_settings;
             int bing_settings = Properties.Settings.Default.bing_settings;
 
             bingkey.Text = Properties.Settings.Default.bingkey;
+            googlekey.Text = Properties.Settings.Default.googlekey;
 
             if (google_settings == 1) { radioButton1.Checked = true; type = "satellite"; }
             else if (google_settings == 2) { radioButton2.Checked = true; type = "roadmap"; }
@@ -60,11 +63,6 @@ namespace gcWorld_Aerial_Proxy
             prefixes[0] = "http://localhost:50123/";
             t = new Thread(new ThreadStart(NonblockingListener));
             t.Start();
-        }
-
-        private void write(String text)
-        {
-            label1.Text = text;
         }
 
         public static void NonblockingListener()
@@ -197,11 +195,35 @@ namespace gcWorld_Aerial_Proxy
                 Properties.Settings.Default.Save();
             }
         }
+
+        private void googlekey_save_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.googlekey = googlekey.Text;
+            Properties.Settings.Default.Save();
+            googlekey_save.Enabled = false;
+        }
+
+        private void googlekey_TextChanged(object sender, EventArgs e)
+        {
+            googlekey_save.Enabled = true;
+        }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://developers.google.com/maps/documentation/maps-static/intro");
+        }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://cloud.google.com/maps-platform/terms/#3-license");
+        }
     }
 
     class Worker
     {
         private HttpListenerContext context;
+        private string imageUrl = "";
+        private string[] subdomains;
 
         public Worker(HttpListenerContext context)
         {
@@ -221,66 +243,69 @@ namespace gcWorld_Aerial_Proxy
             string url = context.Request.Url.ToString();
 
             string[] param = url.Split('/');
-
-            if (param[3] != "favicon.ico")
+            try
             {
-
-                Console.WriteLine("'" + param[3] + "'" + "'" + param[4] + "'" + "'" + param[5] + "'");
-
-                double x = Double.Parse(param[3]);
-                double y = Double.Parse(param[4]);
-                double z = Double.Parse(param[5]);
-
-
-                //google base
-                //http://maps.googleapis.com/maps/api/staticmap?center=".toLatLong($_GET['x'], $_GET['y'], $_GET['z'])."&maptype=$type&zoom=".$_GET['z']."&size=".$res."&scale=".$scale."&sensor=false&format=".$format."&key=$apicode
-                string googleurl = "http://maps.googleapis.com/maps/api/staticmap?center=" + toLatLong(x, y, z) + "&maptype=" + Form1.type + "&zoom=" + z + "&size=256x256&scale=1&sensor=false&format=jpg&key=AIzaSyApknIRkAftJA_tlfnH88O1_EICgQuSYZg";
-
-                if (Form1.provider == "google")
+                if (param[3] != "favicon.ico")
                 {
-                    WebRequest request = WebRequest.Create("http://maps.googleapis.com/maps/api/staticmap?center=" + toLatLong(x, y, z) + "&maptype=" + Form1.type + "&zoom=" + z + "&size=256x256&scale=1&sensor=false&format=jpg&key=AIzaSyApknIRkAftJA_tlfnH88O1_EICgQuSYZg");
-                    WebResponse response = request.GetResponse();
-                    Stream dataStream = response.GetResponseStream();
 
-                    dataStream.CopyTo(context.Response.OutputStream);
-                }
-                else if (Form1.provider == "bing")
-                {
-                    WebRequest request = WebRequest.Create("http://dev.virtualearth.net/REST/V1/Imagery/Metadata/" + Form1.type_bing + "?mapVersion=v1&output=json&key=" + Properties.Settings.Default.bingkey); //+ toLatLong(x, y, z) + "&maptype=" + Form1.type + "&zoom=" + z + "&size=256x256&scale=1&sensor=false&format=jpg&key=AIzaSyApknIRkAftJA_tlfnH88O1_EICgQuSYZg");
-                    WebResponse response = request.GetResponse();
+                    Console.WriteLine("'" + param[3] + "'" + "'" + param[4] + "'" + "'" + param[5] + "'");
 
-                    Stream dataStream = response.GetResponseStream();
-                    // Open the stream using a StreamReader for easy access.
-                    StreamReader reader = new StreamReader(dataStream);
-                    // Read the content.
-                    string responseFromServer = reader.ReadToEnd();
-                    // Display the content.
-                    Console.WriteLine(responseFromServer);
+                    int x = int.Parse(param[3]);
+                    int y = int.Parse(param[4]);
+                    int z = int.Parse(param[5]);
 
-                    dynamic stuff = JsonConvert.DeserializeObject(responseFromServer);
 
-                    if((int)stuff.statusCode==200)
+                    //google base
+                    //http://maps.googleapis.com/maps/api/staticmap?center=".toLatLong($_GET['x'], $_GET['y'], $_GET['z'])."&maptype=$type&zoom=".$_GET['z']."&size=".$res."&scale=".$scale."&sensor=false&format=".$format."&key=$apicode
+                    string google_key = "";
+                    if (Properties.Settings.Default.googlekey != "") google_key = Properties.Settings.Default.googlekey;
+
+                    if (Form1.provider == "google")
                     {
-                        Console.WriteLine((String)stuff.resourceSets[0].resources[0].imageUrl);
+                        WebRequest request = WebRequest.Create("http://maps.googleapis.com/maps/api/staticmap?center=" + toLatLong(x, y, z) + "&maptype=" + Form1.type + "&zoom=" + z + "&size=256x256&scale=1&sensor=false&format=jpg&key=" + google_key);
+                        try
+                        {
+                            WebResponse response = request.GetResponse();
+                            Stream dataStream = response.GetResponseStream();
+                            context.Response.ContentType = "image/jpeg";
+                            dataStream.CopyTo(context.Response.OutputStream);
+                        } catch (WebException e)
+                        {
+                            Console.WriteLine("Error " + e);
+                            Stream estream = e.Response.GetResponseStream();
+                            StreamReader reader = new StreamReader(e.Response.GetResponseStream());
+                            // Read the content.
+                            string responseFromServer = reader.ReadToEnd();
+                            // Display the content.
+                            Console.WriteLine(responseFromServer);
+                            estream.CopyTo(context.Response.OutputStream);
+                        }
+                        
                     }
-                    else
+                    else if (Form1.provider == "bing")
                     {
-                        string responseString = "<HTML><BODY> ERROR!</BODY></HTML>";
-                        byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
-                        // Get a response stream and write the response to it.
-                        context.Response.ContentLength64 = buffer.Length;
-                        context.Response.StatusCode = (int)stuff.statusCode;
-                        System.IO.Stream output = context.Response.OutputStream;
-                        output.Write(buffer, 0, buffer.Length);
-                        // You must close the output stream.
+
+                        if (imageUrl == "") GetBingMetadata();
+                        GetBingImage(x, y, z);
+
                     }
 
 
+
+                    context.Response.OutputStream.Close();
                 }
-
-
-
-                context.Response.OutputStream.Close();
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                string responseString = "<HTML><BODY> ERROR!</BODY></HTML>";
+                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+                context.Response.ContentType = "text/html";
+                // Get a response stream and write the response to it.
+                context.Response.ContentLength64 = buffer.Length;
+                context.Response.StatusCode = 401;
+                System.IO.Stream output = context.Response.OutputStream;
+                output.Write(buffer, 0, buffer.Length);
+                // You must close the output stream.
             }
         }
 
@@ -313,5 +338,121 @@ namespace gcWorld_Aerial_Proxy
 
             return lat_deg+","+lon_deg; ;
         }
+
+        /// <summary>
+        /// Converts tile XY coordinates into a QuadKey at a specified level of detail.
+        /// </summary>
+        /// <param name="tileX">Tile X coordinate.</param>
+        /// <param name="tileY">Tile Y coordinate.</param>
+        /// <param name="levelOfDetail">Level of detail, from 1 (lowest detail)
+        /// to 23 (highest detail).</param>
+        /// <returns>A string containing the QuadKey.</returns>
+        public static string ToQuad(int tileX, int tileY, int levelOfDetail)
+        {
+            StringBuilder quadKey = new StringBuilder();
+            for (int i = levelOfDetail; i > 0; i--)
+            {
+                char digit = '0';
+                int mask = 1 << (i - 1);
+                if ((tileX & mask) != 0)
+                {
+                    digit++;
+                }
+                if ((tileY & mask) != 0)
+                {
+                    digit++;
+                    digit++;
+                }
+                quadKey.Append(digit);
+            }
+            return quadKey.ToString();
+        }
+
+        private void GetBingMetadata()
+        {
+            WebRequest request = WebRequest.Create("http://dev.virtualearth.net/REST/V1/Imagery/Metadata/" + Form1.type_bing + "?mapVersion=v1&output=json&key=" + Properties.Settings.Default.bingkey); //+ toLatLong(x, y, z) + "&maptype=" + Form1.type + "&zoom=" + z + "&size=256x256&scale=1&sensor=false&format=jpg&key=AIzaSyApknIRkAftJA_tlfnH88O1_EICgQuSYZg");
+            WebResponse response = request.GetResponse();
+
+            Stream dataStream = response.GetResponseStream();
+            // Open the stream using a StreamReader for easy access.
+            StreamReader reader = new StreamReader(dataStream);
+            // Read the content.
+            string responseFromServer = reader.ReadToEnd();
+            // Display the content.
+            Console.WriteLine(responseFromServer);
+
+            dynamic stuff = JsonConvert.DeserializeObject(responseFromServer);
+
+            if ((int)stuff.statusCode == 200)
+            {
+                Console.WriteLine((String)stuff.resourceSets[0].resources[0].imageUrl);
+                imageUrl = (String)stuff.resourceSets[0].resources[0].imageUrl;
+
+                subdomains = stuff.resourceSets[0].resources[0].imageUrlSubdomains.ToObject<string[]>();
+                Random rnd = new Random();
+                int subdomain_nr = rnd.Next(0, subdomains.Length-1);
+                string subdomain = subdomains[subdomain_nr];
+                imageUrl = imageUrl.Replace("{subdomain}", subdomain);
+                Console.WriteLine(subdomain);
+            }
+            else
+            {
+                string responseString = "<HTML><BODY> ERROR!</BODY></HTML>";
+                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+                // Get a response stream and write the response to it.
+                context.Response.ContentLength64 = buffer.Length;
+                context.Response.ContentType = "text/html";
+                context.Response.StatusCode = (int)stuff.statusCode;
+                System.IO.Stream output = context.Response.OutputStream;
+                output.Write(buffer, 0, buffer.Length);
+                // You must close the output stream.
+            }
+        }
+
+        private void GetBingImage(int x, int y, int z)
+        {
+            imageUrl = imageUrl.Replace("{quadkey}", ToQuad(x, y, z));
+            WebRequest request = WebRequest.Create(imageUrl);
+            WebResponse response = request.GetResponse();
+            Stream dataStream = response.GetResponseStream();
+            context.Response.ContentType = "image/jpeg";
+            dataStream.CopyTo(context.Response.OutputStream);
+        }
+
+        private Image DrawText(String text, Font font, Color textColor, Color backColor)
+        {
+            //first, create a dummy bitmap just to get a graphics object
+            Image img = new Bitmap(1, 1);
+            Graphics drawing = Graphics.FromImage(img);
+
+            //measure the string to see how big the image needs to be
+            SizeF textSize = drawing.MeasureString(text, font);
+
+            //free up the dummy image and old graphics object
+            img.Dispose();
+            drawing.Dispose();
+
+            //create a new image of the right size
+            img = new Bitmap((int)textSize.Width, (int)textSize.Height);
+
+            drawing = Graphics.FromImage(img);
+
+            //paint the background
+            drawing.Clear(backColor);
+
+            //create a brush for the text
+            Brush textBrush = new SolidBrush(textColor);
+
+            drawing.DrawString(text, font, textBrush, 0, 0);
+
+            drawing.Save();
+
+            textBrush.Dispose();
+            drawing.Dispose();
+
+            return img;
+
+        }
     }
+
 }

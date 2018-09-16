@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="gcWorld Aerial Proxy.exe" version="1.0.0.0" publicKeyToken="f022c29404721c02" language="neutral" processorArchitecture="msil" type="win32" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="gcWorld Aerial Proxy" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="gcWorld Aerial Proxy.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          UAC-Manifestoptionen
+          Wenn Sie die Ebene der Windows-Benutzerkontensteuerung ändern möchten, ersetzen Sie den 
+          Knoten "requestedExecutionLevel" durch eine der folgenden Angaben.
+
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel level="highestAvailable" uiAccess="false" />
+
+         Wenn Sie Datei- und Registrierungsvirtualisierung für Abwärtskompatibilität 
+         verwenden möchten, löschen Sie den Knoten "requestedExecutionLevel".
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="BouncyCastle.Crypto.dll" size="2605656">
+      <assemblyIdentity name="BouncyCastle.Crypto" version="1.8.2.0" publicKeyToken="0E99375E54769942" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>cQ3UplTGdyUZloIlL6Uq+lVwIBUHjdwzcSOGcLUa7rA=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="gcWorld Aerial Proxy.exe" size="26080">
+      <assemblyIdentity name="gcWorld Aerial Proxy" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>oahl2//0bt9lzhL/2mJP3iVXkmyUKo9IWfaF7spw1E8=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Newtonsoft.Json.dll" size="662528">
+      <assemblyIdentity name="Newtonsoft.Json" version="11.0.0.0" publicKeyToken="30AD4FE6B2A6AEED" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>9Yw3T/yq5ONtdA2Q+/f+cNCrtzKM2a86CntwgD6ZS6Q=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="StreamExtended.dll" size="74752">
+      <assemblyIdentity name="StreamExtended" version="1.0.179.0" publicKeyToken="BBFA0F1D54F50043" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>qdUm1K34BmAihmBF6XfNg61VBPk6sg54bcthhuZgVak=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Titanium.Web.Proxy.dll" size="230912">
+      <assemblyIdentity name="Titanium.Web.Proxy" version="3.0.632.0" publicKeyToken="8E41E1F1C790D7CF" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>0MT4JGD/67fiBs0pu0OWOX0x9U+8WP6DAklVxQquA3g=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="gcWorld Aerial Proxy.exe.config" size="1421">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>I1YtyGnZhia4B67Z+xoM+dpbN0wKThnaWZLFKlIBAAU=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=DESKTOP-S0KOH2C\jonas" issuerKeyHash="7a4c92e55d6c0d3ddd2f3baa60eaf1b951456452" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>CgyoxbQJuWBMsw7sjQXUuENBto+pVrRNV+GL3DptVPE=</DigestValue></Reference></SignedInfo><SignatureValue>Oni049PrRIrXiDjoqD0gpb6s4QL9Hc8TV9cz4h2FDfULIQoCItct5ZJw8o+1G2jqiT3+y3IZLv6ttMFXGEaDRV507izf1bAVUBbse38k5eRaKQ15TMy1sYR7eZnnCoT3st64WZMgj28G5yan/vrlwaaD7+5cyzhgFJnrBMsajVo=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>yVaJSUhrdXhPuHoH6xCGddXwgc2SSq47BjHzBIzEAIlDfMIAbhnVebNYPHWECK5RehiywLsepe8LVaWXgFFdOkBkCHlemsEa6GRmpC1lnw+RBhTRhEyI3xArh5ycWCPWUEU8UDtHDgRnrVfSE54iNUjsLXHICpCF4yDwyK68ksE=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="f1546d3adc8be1574db456a98fb64143b8d4058dec0eb34c60b909b4c5a80c0a" Description="" Url=""><as:assemblyIdentity name="gcWorld Aerial Proxy.exe" version="1.0.0.0" publicKeyToken="f022c29404721c02" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=DESKTOP-S0KOH2C\jonas</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>gqBbIyjqy4y4QtxPfMk5rJRIvWE+UErQfR0usxK1pZc=</DigestValue></Reference></SignedInfo><SignatureValue>ncdVBj83PORq/l7HF/h7pSEQJyq0AO4rcran4/SLMcAXRtTcvoxsiUXRNS0QWYieFxdQk4ERB9al5tO0lCWjZPb6ckhgVtWhQUljeyc9cjrnZvnUe49qNqk7HYnaWFOpnchwYyR8RrFnCUvmwKhBA698H9xp9z0n9sK5ZOVaW5U=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>yVaJSUhrdXhPuHoH6xCGddXwgc2SSq47BjHzBIzEAIlDfMIAbhnVebNYPHWECK5RehiywLsepe8LVaWXgFFdOkBkCHlemsEa6GRmpC1lnw+RBhTRhEyI3xArh5ycWCPWUEU8UDtHDgRnrVfSE54iNUjsLXHICpCF4yDwyK68ksE=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB7TCCAVagAwIBAgIQMW2Fx8wpkJlHw8P9Gv030zANBgkqhkiG9w0BAQsFADA1MTMwMQYDVQQDHioARABFAFMASwBUAE8AUAAtAFMAMABLAE8ASAAyAEMAXABqAG8AbgBhAHMwHhcNMTgwOTE2MTYwMjA1WhcNMTkwOTE2MjIwMjA1WjA1MTMwMQYDVQQDHioARABFAFMASwBUAE8AUAAtAFMAMABLAE8ASAAyAEMAXABqAG8AbgBhAHMwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMlWiUlIa3V4T7h6B+sQhnXV8IHNkkquOwYx8wSMxACJQ3zCAG4Z1XmzWDx1hAiuUXoYssC7HqXvC1Wll4BRXTpAZAh5XprBGuhkZqQtZZ8PkQYU0YRMiN8QK4ecnFgj1lBFPFA7Rw4EZ61X0hOeIjVI7C1xyAqQheMg8MiuvJLBAgMBAAEwDQYJKoZIhvcNAQELBQADgYEAHBh16H3R/5zi1tSBsSq4KBcpFqPBoJJYbNwEI2yxFR8Sw5fcHX0ptsg7Vn90wHaGWMc6CdmU9D8zwtwUmaZHS+UxWjql7sLyZbwzqcvu1vNI1BY/3jx2mmpDkm6qPm4cBg+08TXwz1vWyaGWoIHwWHyGnz+gSEPMPdAmcuLducM=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

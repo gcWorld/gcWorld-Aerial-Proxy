@@ -70,5 +70,17 @@ namespace gcWorld_Aerial_Proxy.Properties {
                 this["bingkey"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string googlekey {
+            get {
+                return ((string)(this["googlekey"]));
+            }
+            set {
+                this["googlekey"] = value;
+            }
+        }
     }
 }

@@ -31,10 +31,14 @@
             this.googlebtn = new System.Windows.Forms.RadioButton();
             this.bingbtn = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.googlekey_save = new System.Windows.Forms.Button();
             this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.googlekey = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.bingkey_save = new System.Windows.Forms.Button();
@@ -43,7 +47,7 @@
             this.radioButton4 = new System.Windows.Forms.RadioButton();
             this.radioButton5 = new System.Windows.Forms.RadioButton();
             this.radioButton6 = new System.Windows.Forms.RadioButton();
-            this.label1 = new System.Windows.Forms.Label();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -66,7 +70,7 @@
             // bingbtn
             // 
             this.bingbtn.AutoSize = true;
-            this.bingbtn.Location = new System.Drawing.Point(12, 58);
+            this.bingbtn.Location = new System.Drawing.Point(12, 83);
             this.bingbtn.Margin = new System.Windows.Forms.Padding(2);
             this.bingbtn.Name = "bingbtn";
             this.bingbtn.Size = new System.Drawing.Size(57, 21);
@@ -78,17 +82,31 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.linkLabel2);
+            this.groupBox1.Controls.Add(this.googlekey_save);
             this.groupBox1.Controls.Add(this.radioButton3);
+            this.groupBox1.Controls.Add(this.googlekey);
+            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.radioButton2);
             this.groupBox1.Controls.Add(this.radioButton1);
             this.groupBox1.Location = new System.Drawing.Point(198, 20);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(153, 197);
+            this.groupBox1.Size = new System.Drawing.Size(153, 227);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Google Settings";
+            // 
+            // googlekey_save
+            // 
+            this.googlekey_save.Location = new System.Drawing.Point(6, 160);
+            this.googlekey_save.Name = "googlekey_save";
+            this.googlekey_save.Size = new System.Drawing.Size(139, 32);
+            this.googlekey_save.TabIndex = 13;
+            this.googlekey_save.Text = "Save Key";
+            this.googlekey_save.UseVisualStyleBackColor = true;
+            this.googlekey_save.Click += new System.EventHandler(this.googlekey_save_Click);
             // 
             // radioButton3
             // 
@@ -101,6 +119,24 @@
             this.radioButton3.Text = "Hybrid";
             this.radioButton3.UseVisualStyleBackColor = true;
             this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButton3_CheckedChanged);
+            // 
+            // googlekey
+            // 
+            this.googlekey.Location = new System.Drawing.Point(6, 132);
+            this.googlekey.Name = "googlekey";
+            this.googlekey.Size = new System.Drawing.Size(139, 22);
+            this.googlekey.TabIndex = 12;
+            this.googlekey.TextChanged += new System.EventHandler(this.googlekey_TextChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label3.Location = new System.Drawing.Point(3, 111);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(107, 17);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Google API Key";
             // 
             // radioButton2
             // 
@@ -129,6 +165,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.linkLabel3);
             this.groupBox2.Controls.Add(this.googlebtn);
             this.groupBox2.Controls.Add(this.bingbtn);
             this.groupBox2.Location = new System.Drawing.Point(17, 20);
@@ -139,6 +176,17 @@
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Pick Image Provider";
+            // 
+            // linkLabel3
+            // 
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.Location = new System.Drawing.Point(9, 51);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(101, 17);
+            this.linkLabel3.TabIndex = 12;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "Licence Terms";
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
             // 
             // groupBox3
             // 
@@ -233,24 +281,22 @@
             this.radioButton6.UseVisualStyleBackColor = true;
             this.radioButton6.CheckedChanged += new System.EventHandler(this.radioButton6_CheckedChanged);
             // 
-            // label1
+            // linkLabel2
             // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.label1.Location = new System.Drawing.Point(13, 230);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(82, 17);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Not running";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.Location = new System.Drawing.Point(3, 195);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(97, 17);
+            this.linkLabel2.TabIndex = 11;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "Get Maps Key";
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(547, 259);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -266,7 +312,6 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -277,7 +322,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RadioButton radioButton3;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButton1;
@@ -288,6 +332,11 @@
         private System.Windows.Forms.Button bingkey_save;
         private System.Windows.Forms.TextBox bingkey;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button googlekey_save;
+        private System.Windows.Forms.TextBox googlekey;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.LinkLabel linkLabel2;
+        private System.Windows.Forms.LinkLabel linkLabel3;
     }
 }
 
