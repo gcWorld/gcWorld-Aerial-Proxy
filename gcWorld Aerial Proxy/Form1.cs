@@ -45,7 +45,11 @@ namespace gcWorld_Aerial_Proxy
             int bing_settings = Properties.Settings.Default.bing_settings;
 
             bingkey.Text = Properties.Settings.Default.bingkey;
+            if (bingkey.Text != "")
+                bingkey_save.Enabled = false;
             googlekey.Text = Properties.Settings.Default.googlekey;
+            if (googlekey.Text != "")
+                googlekey_save.Enabled = false;
 
             if (google_settings == 1) { radioButton1.Checked = true; type = "satellite"; }
             else if (google_settings == 2) { radioButton2.Checked = true; type = "roadmap"; }
@@ -222,7 +226,7 @@ namespace gcWorld_Aerial_Proxy
     class Worker
     {
         private HttpListenerContext context;
-        private string imageUrl = "";
+        private static string imageUrl = "";
         private string[] subdomains;
 
         public Worker(HttpListenerContext context)
@@ -379,10 +383,10 @@ namespace gcWorld_Aerial_Proxy
             // Read the content.
             string responseFromServer = reader.ReadToEnd();
             // Display the content.
-            Console.WriteLine(responseFromServer);
+            
 
             dynamic stuff = JsonConvert.DeserializeObject(responseFromServer);
-
+            Console.WriteLine(stuff.statusCode);
             if ((int)stuff.statusCode == 200)
             {
                 Console.WriteLine((String)stuff.resourceSets[0].resources[0].imageUrl);
@@ -411,8 +415,8 @@ namespace gcWorld_Aerial_Proxy
 
         private void GetBingImage(int x, int y, int z)
         {
-            imageUrl = imageUrl.Replace("{quadkey}", ToQuad(x, y, z));
-            WebRequest request = WebRequest.Create(imageUrl);
+            string imageUrltemp = imageUrl.Replace("{quadkey}", ToQuad(x, y, z));
+            WebRequest request = WebRequest.Create(imageUrltemp);
             WebResponse response = request.GetResponse();
             Stream dataStream = response.GetResponseStream();
             context.Response.ContentType = "image/jpeg";
