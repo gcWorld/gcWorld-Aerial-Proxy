@@ -96,6 +96,11 @@ namespace gcWorld_Aerial_Proxy
             
         }
 
+        public void label1Text(string text)
+        {
+            label1.Text = text;
+        }
+
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             RequestStop();
@@ -288,9 +293,9 @@ namespace gcWorld_Aerial_Proxy
                     }
                     else if (Form1.provider == "bing")
                     {
-
+                       // if (Properties.Settings.Default.bingkey == "") form.label1Text("API Code Required!");
                         if (imageUrl == "") GetBingMetadata();
-                        GetBingImage(x, y, z);
+                        if(imageUrl != "") GetBingImage(x, y, z);
 
                     }
 
@@ -375,41 +380,54 @@ namespace gcWorld_Aerial_Proxy
         private void GetBingMetadata()
         {
             WebRequest request = WebRequest.Create("http://dev.virtualearth.net/REST/V1/Imagery/Metadata/" + Form1.type_bing + "?mapVersion=v1&output=json&key=" + Properties.Settings.Default.bingkey); //+ toLatLong(x, y, z) + "&maptype=" + Form1.type + "&zoom=" + z + "&size=256x256&scale=1&sensor=false&format=jpg&key=AIzaSyApknIRkAftJA_tlfnH88O1_EICgQuSYZg");
-            WebResponse response = request.GetResponse();
-
-            Stream dataStream = response.GetResponseStream();
-            // Open the stream using a StreamReader for easy access.
-            StreamReader reader = new StreamReader(dataStream);
-            // Read the content.
-            string responseFromServer = reader.ReadToEnd();
-            // Display the content.
-            
-
-            dynamic stuff = JsonConvert.DeserializeObject(responseFromServer);
-            Console.WriteLine(stuff.statusCode);
-            if ((int)stuff.statusCode == 200)
+            try
             {
-                Console.WriteLine((String)stuff.resourceSets[0].resources[0].imageUrl);
-                imageUrl = (String)stuff.resourceSets[0].resources[0].imageUrl;
+                WebResponse response = request.GetResponse();
 
-                subdomains = stuff.resourceSets[0].resources[0].imageUrlSubdomains.ToObject<string[]>();
-                Random rnd = new Random();
-                int subdomain_nr = rnd.Next(0, subdomains.Length-1);
-                string subdomain = subdomains[subdomain_nr];
-                imageUrl = imageUrl.Replace("{subdomain}", subdomain);
-                Console.WriteLine(subdomain);
-            }
-            else
+                Stream dataStream = response.GetResponseStream();
+                // Open the stream using a StreamReader for easy access.
+                StreamReader reader = new StreamReader(dataStream);
+                // Read the content.
+                string responseFromServer = reader.ReadToEnd();
+                // Display the content.
+
+
+                dynamic stuff = JsonConvert.DeserializeObject(responseFromServer);
+                Console.WriteLine(stuff.statusCode);
+                if ((int)stuff.statusCode == 200)
+                {
+                    Console.WriteLine((String)stuff.resourceSets[0].resources[0].imageUrl);
+                    imageUrl = (String)stuff.resourceSets[0].resources[0].imageUrl;
+
+                    subdomains = stuff.resourceSets[0].resources[0].imageUrlSubdomains.ToObject<string[]>();
+                    Random rnd = new Random();
+                    int subdomain_nr = rnd.Next(0, subdomains.Length - 1);
+                    string subdomain = subdomains[subdomain_nr];
+                    imageUrl = imageUrl.Replace("{subdomain}", subdomain);
+                    Console.WriteLine(subdomain);
+                }
+                else
+                {
+                    string responseString = "<HTML><BODY> ERROR!</BODY></HTML>";
+                    byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+                    // Get a response stream and write the response to it.
+                    context.Response.ContentLength64 = buffer.Length;
+                    context.Response.ContentType = "text/html";
+                    context.Response.StatusCode = (int)stuff.statusCode;
+                    System.IO.Stream output = context.Response.OutputStream;
+                    output.Write(buffer, 0, buffer.Length);
+                    // You must close the output stream.
+                }
+            } catch (WebException e)
             {
-                string responseString = "<HTML><BODY> ERROR!</BODY></HTML>";
+                string responseString = "<HTML><BODY> "+e.Message+"</BODY></HTML>";
                 byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
                 // Get a response stream and write the response to it.
                 context.Response.ContentLength64 = buffer.Length;
                 context.Response.ContentType = "text/html";
-                context.Response.StatusCode = (int)stuff.statusCode;
+                context.Response.StatusCode = 400;
                 System.IO.Stream output = context.Response.OutputStream;
                 output.Write(buffer, 0, buffer.Length);
-                // You must close the output stream.
             }
         }
 
