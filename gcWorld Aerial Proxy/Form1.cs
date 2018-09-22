@@ -65,21 +65,27 @@ namespace gcWorld_Aerial_Proxy
 
             String[] prefixes = new String[1];
             prefixes[0] = "http://localhost:50129/";
-            t = new Thread(new ThreadStart(NonblockingListener));
+            t = new Thread(() => NonblockingListener(this));
             t.Start();
         }
 
-        public static void NonblockingListener()
+        public static void NonblockingListener(Form1 form)
         {
             listener = new HttpListener();
             listener.Prefixes.Add("http://localhost:50129/");
-            listener.Start();
-            Console.WriteLine("Listening...");
+            try
+            {
+                listener.Start();
+            } catch(HttpListenerException e)
+            {
+                MessageBox.Show("Please restart! Port already used by another Program: " + e);
+                Application.Exit();
+            }
             while (!_shouldStop)
             {
                 Console.WriteLine("worker thread: working...");
                 HttpListenerContext ctx = listener.GetContext();
-                new Thread(new Worker(ctx).ProcessRequest).Start();
+                new Thread(new Worker(ctx,form).ProcessRequest).Start();
             }
             listener.Stop();
             Console.WriteLine("worker thread: terminating gracefully.");
@@ -88,7 +94,14 @@ namespace gcWorld_Aerial_Proxy
         public void RequestStop()
         {
             _shouldStop = true;
-            listener.Stop();
+            try
+            {
+                listener.Stop();
+            } catch(ObjectDisposedException e)
+            {
+                //
+            }
+         
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -106,6 +119,7 @@ namespace gcWorld_Aerial_Proxy
             RequestStop();
             t.Abort();
             //listener2.Stop();
+            label1.Text = "If Form not closing please close and restart Programm";
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
@@ -226,6 +240,27 @@ namespace gcWorld_Aerial_Proxy
         {
             System.Diagnostics.Process.Start("https://cloud.google.com/maps-platform/terms/#3-license");
         }
+
+        private void groupBox4_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        public int UpdateTileNr()
+        {
+            if (this.InvokeRequired)
+            { // Wenn Invoke nötig ist, ...
+              // dann rufen wir die Methode selbst per Invoke auf
+                return (int)this.Invoke((Func<int>)UpdateTileNr);
+                // hier ist immer ein return (oder alternativ ein else) erforderlich.
+                // Es verhindert, dass der folgende Code im Worker-Thread ausgeführt wird.
+            }
+            // eigentliche Zugriffe; laufen jetzt auf jeden Fall im GUI-Thread
+            int nr = int.Parse(tilenr.Text);
+            nr = nr + 1;
+            tilenr.Text = nr.ToString();
+            return nr;
+        }
     }
 
     class Worker
@@ -233,10 +268,12 @@ namespace gcWorld_Aerial_Proxy
         private HttpListenerContext context;
         private static string imageUrl = "";
         private string[] subdomains;
+        Form1 form;
 
-        public Worker(HttpListenerContext context)
+        public Worker(HttpListenerContext context, Form1 form)
         {
             this.context = context;
+            this.form = form;
         }
 
         public void ProcessRequest()
@@ -263,6 +300,7 @@ namespace gcWorld_Aerial_Proxy
                     int y = int.Parse(param[4]);
                     int z = int.Parse(param[5]);
 
+                    form.UpdateTileNr();
 
                     //google base
                     //http://maps.googleapis.com/maps/api/staticmap?center=".toLatLong($_GET['x'], $_GET['y'], $_GET['z'])."&maptype=$type&zoom=".$_GET['z']."&size=".$res."&scale=".$scale."&sensor=false&format=".$format."&key=$apicode
@@ -293,7 +331,11 @@ namespace gcWorld_Aerial_Proxy
                     }
                     else if (Form1.provider == "bing")
                     {
-                       // if (Properties.Settings.Default.bingkey == "") form.label1Text("API Code Required!");
+                        if (Properties.Settings.Default.bingkey == "")
+                        form.label1.Invoke((MethodInvoker)delegate {
+                            // Running on the UI thread
+                            form.label1.Text = "API Code Required!";
+                        });
                         if (imageUrl == "") GetBingMetadata();
                         if(imageUrl != "") GetBingImage(x, y, z);
 
@@ -317,6 +359,8 @@ namespace gcWorld_Aerial_Proxy
                 // You must close the output stream.
             }
         }
+
+        
 
         public static void ListenerCallback(IAsyncResult result)
         {
