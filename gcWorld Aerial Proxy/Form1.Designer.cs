@@ -52,6 +52,8 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tilenr = new System.Windows.Forms.Label();
+            this.zoomlvl = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -319,6 +321,8 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.zoomlvl);
+            this.groupBox4.Controls.Add(this.label6);
             this.groupBox4.Controls.Add(this.tilenr);
             this.groupBox4.Controls.Add(this.label4);
             this.groupBox4.Location = new System.Drawing.Point(19, 319);
@@ -348,6 +352,24 @@
             this.tilenr.Size = new System.Drawing.Size(18, 20);
             this.tilenr.TabIndex = 1;
             this.tilenr.Text = "0";
+            // 
+            // zoomlvl
+            // 
+            this.zoomlvl.AutoSize = true;
+            this.zoomlvl.Location = new System.Drawing.Point(127, 52);
+            this.zoomlvl.Name = "zoomlvl";
+            this.zoomlvl.Size = new System.Drawing.Size(18, 20);
+            this.zoomlvl.TabIndex = 3;
+            this.zoomlvl.Text = "0";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(14, 52);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(107, 20);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "Current Zoom";
             // 
             // Form1
             // 
@@ -401,6 +423,8 @@
         private System.Windows.Forms.LinkLabel linkLabel3;
         public System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox4;
+        public System.Windows.Forms.Label zoomlvl;
+        private System.Windows.Forms.Label label6;
         public System.Windows.Forms.Label tilenr;
         private System.Windows.Forms.Label label4;
     }

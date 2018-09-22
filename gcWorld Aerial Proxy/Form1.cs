@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
+using System.Deployment.Application;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -37,8 +38,8 @@ namespace gcWorld_Aerial_Proxy
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            string version = System.Windows.Forms.Application.ProductVersion;
-            this.Text = String.Format("My Application Version {0}", version);
+            string version = GetVersion();
+            this.Text = String.Format("gcWorld Tile Proxy {0}", version);
 
             int provider_setting = Properties.Settings.Default.provider;
             int google_settings = Properties.Settings.Default.google_settings;
@@ -67,6 +68,28 @@ namespace gcWorld_Aerial_Proxy
             prefixes[0] = "http://localhost:50129/";
             t = new Thread(() => NonblockingListener(this));
             t.Start();
+        }
+
+        /// <summary>
+        /// Return the current version. If running the deployed version, returns that version number,
+        /// otherwise returns the assembly version.
+        /// </summary>
+        /// <returns>Version number</returns>
+        public static string GetVersion()
+        {
+            string ourVersion = string.Empty;
+            //if running the deployed application, you can get the version
+            //  from the ApplicationDeployment information. If you try
+            //  to access this when you are running in Visual Studio, it will not work.
+            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+                ourVersion = ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+            else
+            {
+                System.Reflection.Assembly assemblyInfo = System.Reflection.Assembly.GetExecutingAssembly();
+                if (assemblyInfo != null)
+                    ourVersion = assemblyInfo.GetName().Version.ToString();
+            }
+            return ourVersion;
         }
 
         public static void NonblockingListener(Form1 form)
@@ -261,6 +284,20 @@ namespace gcWorld_Aerial_Proxy
             tilenr.Text = nr.ToString();
             return nr;
         }
+
+        public int UpdateZoomLvl(int zoom)
+        {
+            if (this.InvokeRequired)
+            { // Wenn Invoke nötig ist, ...
+              // dann rufen wir die Methode selbst per Invoke auf
+                return (int)this.Invoke((Func<int, int>)UpdateZoomLvl, zoom);
+                // hier ist immer ein return (oder alternativ ein else) erforderlich.
+                // Es verhindert, dass der folgende Code im Worker-Thread ausgeführt wird.
+            }
+            // eigentliche Zugriffe; laufen jetzt auf jeden Fall im GUI-Thread
+            zoomlvl.Text = zoom.ToString();
+            return zoom;
+        }
     }
 
     class Worker
@@ -301,6 +338,8 @@ namespace gcWorld_Aerial_Proxy
                     int z = int.Parse(param[5]);
 
                     form.UpdateTileNr();
+
+                    form.UpdateZoomLvl(z);
 
                     //google base
                     //http://maps.googleapis.com/maps/api/staticmap?center=".toLatLong($_GET['x'], $_GET['y'], $_GET['z'])."&maptype=$type&zoom=".$_GET['z']."&size=".$res."&scale=".$scale."&sensor=false&format=".$format."&key=$apicode
