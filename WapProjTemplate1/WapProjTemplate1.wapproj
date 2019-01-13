@@ -41,7 +41,7 @@
     <PackageCertificateKeyFile>WapProjTemplate1_StoreKey.pfx</PackageCertificateKeyFile>
     <EntryPointProjectUniqueName>..\gcWorld Aerial Proxy\gcWorld Aerial Proxy.csproj</EntryPointProjectUniqueName>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundlePlatforms>neutral</AppxBundlePlatforms>
     <PackageCertificateThumbprint>FD2D81EB4ECB155334F83C9CEDB68AF499F97791</PackageCertificateThumbprint>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
