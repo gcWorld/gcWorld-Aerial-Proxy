@@ -62,6 +62,7 @@ namespace gcWorld_Aerial_Proxy
 
             if (provider_setting == 1) { googlebtn.Checked = true; provider = "google"; }
             else if (provider_setting == 2) { bingbtn.Checked = true; provider = "bing"; }
+            //else if (provider_setting == 3) { osmBtn.Checked = true; provider = "osm"; }
 
 
             String[] prefixes = new String[1];
@@ -298,6 +299,21 @@ namespace gcWorld_Aerial_Proxy
             zoomlvl.Text = zoom.ToString();
             return zoom;
         }
+
+        private void osmBtn_CheckedChanged(object sender, EventArgs e)
+        {
+            /*if(osmBtn.Checked)
+            {
+                provider = "osm";
+                Properties.Settings.Default.provider = 3;
+                Properties.Settings.Default.Save();
+            }*/
+        }
+
+        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.microsoft.com/en-us/maps/licensing");
+        }
     }
 
     class Worker
@@ -348,35 +364,58 @@ namespace gcWorld_Aerial_Proxy
 
                     if (Form1.provider == "google")
                     {
-                        WebRequest request = WebRequest.Create("http://maps.googleapis.com/maps/api/staticmap?center=" + toLatLong(x, y, z) + "&maptype=" + Form1.type + "&zoom=" + z + "&size=256x256&scale=1&sensor=false&format=jpg&key=" + google_key);
-                        try
+                        if (google_key == "")
+                            form.label1.Invoke((MethodInvoker)delegate
+                            {
+                                // Running on the UI thread
+                                form.label1.Text = "API Key Required!";
+                                MessageBox.Show("API Key Required!");
+                            });
+
+                        else
                         {
-                            WebResponse response = request.GetResponse();
-                            Stream dataStream = response.GetResponseStream();
-                            context.Response.ContentType = "image/jpeg";
-                            dataStream.CopyTo(context.Response.OutputStream);
-                        } catch (WebException e)
-                        {
-                            Console.WriteLine("Error " + e);
-                            Stream estream = e.Response.GetResponseStream();
-                            StreamReader reader = new StreamReader(e.Response.GetResponseStream());
-                            // Read the content.
-                            string responseFromServer = reader.ReadToEnd();
-                            // Display the content.
-                            Console.WriteLine(responseFromServer);
-                            estream.CopyTo(context.Response.OutputStream);
+                            WebRequest request = WebRequest.Create("http://maps.googleapis.com/maps/api/staticmap?center=" + toLatLong(x, y, z) + "&maptype=" + Form1.type + "&zoom=" + z + "&size=256x256&scale=1&sensor=false&format=jpg&key=" + google_key);
+                            try
+                            {
+                                WebResponse response = request.GetResponse();
+                                Stream dataStream = response.GetResponseStream();
+                                context.Response.ContentType = "image/jpeg";
+                                dataStream.CopyTo(context.Response.OutputStream);
+                            }
+                            catch (WebException e)
+                            {
+                                Console.WriteLine("Error " + e);
+                                Stream estream = e.Response.GetResponseStream();
+                                StreamReader reader = new StreamReader(e.Response.GetResponseStream());
+                                // Read the content.
+                                string responseFromServer = reader.ReadToEnd();
+                                // Display the content.
+                                Console.WriteLine(responseFromServer);
+                                estream.CopyTo(context.Response.OutputStream);
+                            }
                         }
                         
                     }
                     else if (Form1.provider == "bing")
                     {
                         if (Properties.Settings.Default.bingkey == "")
-                        form.label1.Invoke((MethodInvoker)delegate {
-                            // Running on the UI thread
-                            form.label1.Text = "API Code Required!";
-                        });
-                        if (imageUrl == "") GetBingMetadata();
-                        if(imageUrl != "") GetBingImage(x, y, z);
+                            form.label1.Invoke((MethodInvoker)delegate
+                            {
+                                // Running on the UI thread
+                                form.label1.Text = "API Key Required!";
+                                MessageBox.Show("API Key Required!");
+                            });
+                        else
+                        {
+                            if (imageUrl == "") GetBingMetadata();
+                            if (imageUrl != "") GetBingImage(x, y, z);
+                        }
+
+                    }
+
+                    else if (Form1.provider == "osm")
+                    {
+                        GetOSMImage(x, y, z);
 
                     }
 
@@ -518,6 +557,17 @@ namespace gcWorld_Aerial_Proxy
         {
             string imageUrltemp = imageUrl.Replace("{quadkey}", ToQuad(x, y, z));
             WebRequest request = WebRequest.Create(imageUrltemp);
+            WebResponse response = request.GetResponse();
+            Stream dataStream = response.GetResponseStream();
+            context.Response.ContentType = "image/jpeg";
+            dataStream.CopyTo(context.Response.OutputStream);
+        }
+
+        private void GetOSMImage(int x, int y, int z)
+        {
+            string url = "https://api.mapbox.com/v4/mapbox.satellite/" + z +"/"+ x +"/"+ y +".jpg90?access_token=pk.eyJ1Ijoic2VlYWRsZXIiLCJhIjoiY2lyam95azhmMDAxNGhwbmg1d3I5d2hpaiJ9.tF5nck_QywpWKxJ-7Rq3PQ";
+            //string imageUrltemp = imageUrl.Replace("{quadkey}", ToQuad(x, y, z));
+            WebRequest request = WebRequest.Create(url);
             WebResponse response = request.GetResponse();
             Stream dataStream = response.GetResponseStream();
             context.Response.ContentType = "image/jpeg";
